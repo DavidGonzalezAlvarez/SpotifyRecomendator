@@ -32,7 +32,7 @@ export default function App() {
 }, []);
 
   const logout = () => {
-    axios.get('http://localhost:8888/logout')
+    axios.get('http://localhost:8888/logout', { withCredentials: true })
       .then((response) => {
         console.log(response);
         setIsAuthenticated(false);
