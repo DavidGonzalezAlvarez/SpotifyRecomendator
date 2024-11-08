@@ -51,3 +51,16 @@
   background-color: #1ce662;
   border-color: #1ce662;
 }
+
+.dropdown-button{
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: #fff;
+  font-weight: 500;
+}
+
+.dropdown-button:hover{
+  background: none;
+  border: none;
+}

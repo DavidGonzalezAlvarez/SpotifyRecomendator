@@ -4,12 +4,16 @@ import spotify from './assets/spotify.png';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
+const server_url = process.env.REACT_APP_SERVER_URL;
+
 export default function App() {
+
+  const [userData, setUserData] = useState(null);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = () => {
-    axios.get('http://localhost:8888/login')
+    axios.get(server_url+'/login')
       .then((response) => {
         const spotifyURL = response.data;
         window.location.href = spotifyURL;
@@ -17,24 +21,36 @@ export default function App() {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:8888/auth/verify', { withCredentials: true })
+    axios.get(server_url+'/auth/verify', { withCredentials: true })
         .then((response) => {
-            if (response.data.authenticated) {
-              setIsAuthenticated(true);
-            } else {
-              setIsAuthenticated(false);
-            }
+            setIsAuthenticated(response.data.authenticated);
         })
         .catch((error) => {
             console.error("Error de autenticación:", error);
+            setUserData(null);
             setIsAuthenticated(false);
         });
 }, []);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      axios.get(server_url+'/get/user', { withCredentials: true })
+        .then((response) => {
+          setUserData(response.data.userData);
+        })
+        .catch((error) => {
+          console.log("Error al recibir la informacion del usuario:", error);
+        });
+    } else {
+      setUserData(null);
+    }
+  }, [isAuthenticated]);
+
   const logout = () => {
-    axios.get('http://localhost:8888/logout', { withCredentials: true })
+    axios.get(server_url+'/logout', { withCredentials: true })
       .then((response) => {
         console.log(response);
+        setUserData(null);
         setIsAuthenticated(false);
       });
   }
@@ -51,7 +67,16 @@ export default function App() {
             !isAuthenticated ? (
               <button onClick={login} className="btn btn-outline-light me-2 nav-btn">Log In</button>
             ) : (
-              <button onClick={logout} className="btn btn-outline-light me-2 nav-btn">Log Out</button>
+              <div class="dropdown">
+                <button class="dropdown-toggle dropdown-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {userData != null ? userData.display_name : "Error" }
+                </button>
+                <ul class="dropdown-menu">
+                  <li><button class="dropdown-item" type="button">Canciones</button></li>
+                  <li><button class="dropdown-item" type="button">Artistas</button></li>
+                  <li><button onClick={logout} class="dropdown-item" type="button">Log Out</button></li>
+                </ul>
+              </div>
             )}
         </div>
       </nav>
