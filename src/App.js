@@ -3,6 +3,9 @@ import './styles/App.css';
 import spotify from './assets/spotify.png';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import Songs from './pages/Songs';
+import Artists from './pages/Artists';
 
 const server_url = process.env.REACT_APP_SERVER_URL;
 
@@ -53,6 +56,7 @@ export default function App() {
         setUserData(null);
         setIsAuthenticated(false);
       });
+    window.location.href = 'http://localhost:3000/';
   }
 
   return (
@@ -60,36 +64,42 @@ export default function App() {
       <nav className="navbar navbar-dark justify-content-between p-3">
         <div className="d-flex align-items-center">
           <img src={spotify} alt="Logo" className="logo" />
-          <span className="navbar-brand h1">SpotifyRecomender</span>
+          <Link to='/' className="navbar-brand h1">SpotifyRecomender</Link>
         </div>
         <div>
           {
-            !isAuthenticated ? (
+            !isAuthenticated || userData == null ? (
               <button onClick={login} className="btn btn-outline-light me-2 nav-btn">Log In</button>
             ) : (
               <div class="dropdown">
+                <img src={userData.images[0].url} alt='AvatarUser' className='logo'></img>
                 <button class="dropdown-toggle dropdown-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {userData != null ? userData.display_name : "Error" }
+                  {userData.display_name}
                 </button>
                 <ul class="dropdown-menu">
-                  <li><button class="dropdown-item" type="button">Canciones</button></li>
-                  <li><button class="dropdown-item" type="button">Artistas</button></li>
+                  <li><Link to="/songs" class="dropdown-item">Canciones</Link></li>
+                  <li><Link to="/artists" class="dropdown-item">Artistas</Link></li>
                   <li><button onClick={logout} class="dropdown-item" type="button">Log Out</button></li>
                 </ul>
               </div>
             )}
         </div>
       </nav>
-
-      <div className="main-content d-flex flex-column justify-content-center align-items-center text-center">
-        <h1 className="text-light title">¿Estás buscando algo nuevo para escuchar?</h1>
-        {
-            !isAuthenticated ? (
-              <button onClick={login} className="btn btn-success mt-4">Empezar a escuchar sin logear</button>
-            ) : (
-              <button onClick={login} className="btn btn-success mt-4">Empezar a escuchar logeado</button>
-            )}
-      </div>
+        <Routes>
+          <Route path='/' element={
+            <div className="main-content d-flex flex-column justify-content-center align-items-center text-center">
+            <h2 className="text-light title">¿Estás buscando algo nuevo para escuchar?</h2>
+            {
+                !isAuthenticated ? (
+                  <button onClick={login} className="btn btn-success mt-4">Empezar a escuchar sin logear</button>
+                ) : (
+                  <button onClick={login} className="btn btn-success mt-4">Empezar a escuchar logeado</button>
+                )}
+          </div>
+          }></Route>
+          <Route path='/songs' element={<Songs />}></Route>
+          <Route path='/artists' element={<Artists />}></Route>
+        </Routes>
     </div>
   );
 };

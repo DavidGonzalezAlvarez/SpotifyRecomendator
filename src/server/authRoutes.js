@@ -11,11 +11,15 @@ const client_secret = process.env.CLIENT_SECRET;
 
 router.get("/login", (req, res) => {
     console.log("Petición de login");
+    const scopes = [
+        'user-top-read'
+    ]
     const url = 'https://accounts.spotify.com/authorize?' +
         querystring.stringify({
             response_type: 'code',
             client_id: client_id,
             redirect_uri: redirect_uri,
+            scope: scopes.join(' ')
         });
     res.status(200).send(url);
 });

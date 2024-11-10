@@ -1,6 +1,6 @@
 .app-container {
   background: linear-gradient(180deg, #000400, #000800);
-  height: 100vh;
+  min-height: 100vh;
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -27,6 +27,7 @@
 .logo {
   width: 50px;
   margin-right: 10px;
+  border-radius: 100%;
 }
 
 .main-content {
@@ -58,9 +59,19 @@
   font-size: 1.5em;
   color: #fff;
   font-weight: 500;
+  margin-right: 15px;
 }
 
 .dropdown-button:hover{
   background: none;
   border: none;
+}
+
+.dropdown-menu{
+  background: none;
+}
+
+.dropdown-item{
+  color: #fff;
+  font-size: 1.5em;
 }

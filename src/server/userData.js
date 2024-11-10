@@ -22,4 +22,38 @@ router.get('/get/user', (req, res) => {
     });
 });
 
+router.get('/get/topTracks', (req, res) => {
+    console.log("Peticion de topTracks");
+    const access_token = req.cookies.access_token;
+    const time_range = req.query.timeRange;
+    const options = {
+        url: `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}`,
+        headers: { 'Authorization': 'Bearer '+ access_token} 
+    }
+    request.get(options, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+            res.status(200).json({ topTracks: body });
+        } else {
+            res.status(404).send("Error fetching top tracks");
+        }
+    });
+});
+
+router.get('/get/topArtists', (req, res) => {
+    console.log("Peticion de topArtists");
+    const access_token = req.cookies.access_token;
+    const time_range = req.query.timeRange;
+    const options = {
+        url: `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}`,
+        headers: { 'Authorization': 'Bearer '+ access_token} 
+    }
+    request.get(options, function(error, response, body) {
+        if (response.statusCode === 200) {
+            res.status(200).json({ topArtists: body });
+        } else {
+            res.status(404).send("Error fetching top artists");
+        }
+    });
+});
+
 module.exports = router;
