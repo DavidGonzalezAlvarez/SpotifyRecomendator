@@ -23,11 +23,11 @@ router.get('/get/user', (req, res) => {
 });
 
 router.get('/get/topTracks', (req, res) => {
-    console.log("Peticion de topTracks");
     const access_token = req.cookies.access_token;
     const time_range = req.query.timeRange;
+    const limit = req.query.limit;
     const options = {
-        url: `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}`,
+        url: `https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=${limit}`,
         headers: { 'Authorization': 'Bearer '+ access_token} 
     }
     request.get(options, function(error, response, body) {
@@ -40,11 +40,11 @@ router.get('/get/topTracks', (req, res) => {
 });
 
 router.get('/get/topArtists', (req, res) => {
-    console.log("Peticion de topArtists");
     const access_token = req.cookies.access_token;
     const time_range = req.query.timeRange;
+    const limit = req.query.limit;
     const options = {
-        url: `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}`,
+        url: `https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=${limit}`,
         headers: { 'Authorization': 'Bearer '+ access_token} 
     }
     request.get(options, function(error, response, body) {
